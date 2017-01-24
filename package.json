@@ -1,0 +1,21 @@
+{
+  "name": "crimson14",
+  "version": "1.0.0",
+  "description": "Tools for The Harvard Crimson",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "crimson"
+  ],
+  "author": "Brian Yu",
+  "license": "ISC",
+  "dependencies": {
+    "@nodemailer/pro": "^1.0.0",
+    "body-parser": "^1.16.0",
+    "express": "^4.14.0",
+    "path": "^0.12.7",
+    "sync-request": "^4.0.1"
+  }
+}
