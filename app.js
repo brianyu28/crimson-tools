@@ -15,7 +15,7 @@ app.get('/', function (req, res) {
 
 app.post('/page-zero', function (req, res) {
     setTimeout(function() {
-        today_dsr(req.body.email, req.body.notes);
+        today_dsr(req.body.email, req.body.notes, req.body.time);
     }, 100);
     res.sendFile(path.join(__dirname + '/success.html'));
 });
@@ -67,8 +67,9 @@ function send_botmail(recipients, subject, contents) {
 *************************************************************************************
 */
 
-function today_dsr(email, notes) {
+function today_dsr(email, notes, time) {
     console.log('a');
+    console.log(email);
     var res = request('GET', 'https://app.asana.com/api/1.0/projects/219755265194296/tasks?completed_since=now', {
         'headers': ASANA_HEADERS
 
@@ -87,10 +88,10 @@ function today_dsr(email, notes) {
 
         stories.push(story);
     }
-    add_task_data(email, notes, stories);
+    add_task_data(email, notes, time, stories);
 }
 
-function add_task_data(email, notes, stories) {
+function add_task_data(email, notes, time, stories) {
     console.log('b');
     for (var i = 0, len = stories.length; i < len; i++) {
         var story_id = stories[i]["id"];
@@ -103,10 +104,10 @@ function add_task_data(email, notes, stories) {
         else
             stories[i]["assignee"] = null;
     }
-    construct_email_from(email, notes, stories);
+    construct_email_from(email, notes, time, stories);
 }
 
-function construct_email_from(email, notes, stories) {
+function construct_email_from(email, notes, time, stories) {
     console.log('c');
     contents = "<!DOCTYPE html><html><head>";
     contents += "<link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" integrity=\"sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u\" crossorigin=\"anonymous\">";
@@ -130,7 +131,7 @@ function construct_email_from(email, notes, stories) {
         contents += "<br/><br/>";
     }
 
-    contents += "See you all at <b>Page 0 at 4:00</b>!";
+    contents += "See you all at <b>Page 0 at " + time + "</b>!";
     contents += "<br/><br/>Remember...";
     contents += "<h3 style=\"color:red\">Page 0 is mandatory!</h3>";
     contents += "<br/><br/>";
@@ -139,5 +140,5 @@ function construct_email_from(email, notes, stories) {
 
     contents += "</div></body></html>"
 
-    send_botmail(email, "Page 0", contents);
+    send_botmail(email, "Page 0 at " + time + "!", contents);
 }
